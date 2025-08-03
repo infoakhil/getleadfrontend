@@ -1,15 +1,26 @@
-import { useState } from "react"
 import { DashboardPage } from "@/features/dashboard/DashboardPage"
 import { LeadsPage } from "@/features/leads/LeadsPage"
-
-type Route = "/" | "/leads" | "/companies" | "/deals" | "/calendar" | "/reports" | "/settings"
+import { LoginPage } from "@/features/auth/LoginPage"
 
 interface AppRouterProps {
-  currentPath: Route
+  currentPath: string
+  isAuthenticated: boolean
 }
 
-export function AppRouter({ currentPath }: AppRouterProps) {
+export function AppRouter({ currentPath, isAuthenticated }: AppRouterProps) {
+  // If not authenticated and trying to access protected route, show login
+  if (!isAuthenticated && currentPath !== "/login") {
+    return <LoginPage />
+  }
+
+  // If authenticated and trying to access login, redirect to dashboard
+  if (isAuthenticated && currentPath === "/login") {
+    return <DashboardPage />
+  }
+
   switch (currentPath) {
+    case "/login":
+      return <LoginPage />
     case "/":
       return <DashboardPage />
     case "/leads":
@@ -26,14 +37,5 @@ export function AppRouter({ currentPath }: AppRouterProps) {
       return <div>Settings Page (Coming Soon)</div>
     default:
       return <DashboardPage />
-  }
-}
-
-export function useRouter() {
-  const [currentPath, setCurrentPath] = useState<Route>("/")
-  
-  return {
-    currentPath,
-    navigate: (path: Route) => setCurrentPath(path)
   }
 }
