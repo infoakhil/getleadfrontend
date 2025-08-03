@@ -6,14 +6,14 @@ import { useDashboard } from "@/hooks/useDashboard"
 import type { Lead, LeadStatus } from "@/types"
 
 const getStatusColor = (status: LeadStatus) => {
-  const colors: Record<LeadStatus, string> = {
+  const colors: Record<LeadStatus, "default" | "secondary" | "destructive" | "outline"> = {
     new: "default",
     contacted: "secondary",
-    qualified: "success",
+    qualified: "default",
     lost: "destructive",
-    converted: "default"
+    converted: "outline"
   }
-  return colors[status] as any
+  return colors[status]
 }
 
 export function RecentLeadsTable() {

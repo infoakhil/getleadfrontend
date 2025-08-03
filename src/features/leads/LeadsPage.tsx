@@ -10,14 +10,14 @@ import type { Lead, LeadStatus } from "@/types"
 import { Search, Plus } from "lucide-react"
 
 const getStatusColor = (status: LeadStatus) => {
-  const colors: Record<LeadStatus, string> = {
+  const colors: Record<LeadStatus, "default" | "secondary" | "destructive" | "outline"> = {
     new: "default",
     contacted: "secondary",
-    qualified: "success",
+    qualified: "default",
     lost: "destructive",
-    converted: "default"
+    converted: "outline"
   }
-  return colors[status] as any
+  return colors[status]
 }
 
 export function LeadsPage() {
