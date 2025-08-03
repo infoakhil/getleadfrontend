@@ -8,28 +8,57 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/contexts/AuthContext"
 import { useRouter } from "@/contexts/RouterContext"
 
-export function LoginPage() {
+export function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [countryCode, setCountryCode] = useState("971")
-  const [mobileNumber, setMobileNumber] = useState("")
-  const [password, setPassword] = useState("")
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+    password: "",
+    confirmPassword: ""
+  })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   
   const { login } = useAuth()
   const { navigate } = useRouter()
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
     setError("")
+
+    // Validation
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match")
+      return
+    }
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters")
+      return
+    }
+
+    setLoading(true)
     
     try {
-      const fullMobile = `+${countryCode}${mobileNumber}`
-      await login(fullMobile, password)
+      // Simulate registration API call
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      // After successful registration, log the user in
+      const fullMobile = `+${countryCode}${formData.mobile}`
+      await login(fullMobile, formData.password)
       navigate("/")
     } catch (err) {
-      setError("Invalid mobile number or password")
+      setError("Registration failed. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -39,45 +68,41 @@ export function LoginPage() {
     <div className="min-h-screen flex">
       {/* Left side - Hero section */}
       <div className="hidden lg:flex lg:w-1/2 bg-[#3F4254] text-white p-12 flex-col justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
-            <span className="text-xl font-bold">G</span>
-          </div>
-          <div>
-            <span className="text-xl font-bold">GETLEAD</span>
-            <span className="text-xl font-light ml-2">CRM</span>
-          </div>
-        </div>
-
-        <div className="space-y-6">
+        <div className="space-y-6 flex-1 flex flex-col justify-center">
           <div className="relative">
             <img 
-              src="https://illustrations.popsy.co/amber/remote-work.svg" 
-              alt="Team collaboration" 
+              src="https://illustrations.popsy.co/amber/app-stats.svg" 
+              alt="Analytics dashboard" 
               className="w-full max-w-md mx-auto"
             />
           </div>
           <div>
-            <h2 className="text-3xl font-bold mb-4">Focus on what matters most</h2>
+            <h2 className="text-3xl font-bold mb-4">Stay automated, go productive</h2>
             <p className="text-gray-300">
-              Manage all your tasks effectively and stay focused on the more important tasks
+              Say goodbye to all the repetitive and boring manual tasks now.
             </p>
           </div>
         </div>
 
         <div className="flex gap-2">
-          <div className="w-2 h-2 bg-white rounded-full"></div>
           <div className="w-2 h-2 bg-white/50 rounded-full"></div>
+          <div className="w-2 h-2 bg-white rounded-full"></div>
           <div className="w-2 h-2 bg-white/50 rounded-full"></div>
         </div>
       </div>
 
-      {/* Right side - Login form */}
+      {/* Right side - Registration form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-gray-50">
         <Card className="w-full max-w-md p-8 shadow-none border-0">
           <div className="space-y-6">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold">Login to your account!</h1>
+            <div className="text-center space-y-2">
+              <h1 className="text-2xl font-bold">
+                Start closing more deals<br />
+                with <span className="text-red-600">Getlead</span>
+              </h1>
+              <p className="text-gray-600">
+                Start your 14-day free trial. No credit card required.
+              </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -86,7 +111,33 @@ export function LoginPage() {
                   {error}
                 </div>
               )}
-              
+
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Enter your name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email">Email address</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Email address"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="mobile">Mobile number</Label>
                 <div className="flex gap-2">
@@ -103,10 +154,11 @@ export function LoginPage() {
                   </Select>
                   <Input
                     id="mobile"
+                    name="mobile"
                     type="tel"
-                    placeholder="Mobile number"
-                    value={mobileNumber}
-                    onChange={(e) => setMobileNumber(e.target.value)}
+                    placeholder="eg: +91 9447 752 786"
+                    value={formData.mobile}
+                    onChange={handleInputChange}
                     required
                     className="flex-1"
                   />
@@ -118,10 +170,11 @@ export function LoginPage() {
                 <div className="relative">
                   <Input
                     id="password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Type your password here"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Create new password"
+                    value={formData.password}
+                    onChange={handleInputChange}
                     required
                     className="pr-10"
                   />
@@ -139,14 +192,34 @@ export function LoginPage() {
                     )}
                   </Button>
                 </div>
-                <div className="text-right">
-                  <button
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm password"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    required
+                    className="pr-10"
+                  />
+                  <Button
                     type="button"
-                    onClick={() => navigate("/forgot-password")}
-                    className="text-sm text-gray-600 hover:text-gray-900"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
-                    Forgot Password ?
-                  </button>
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4 text-gray-400" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-gray-400" />
+                    )}
+                  </Button>
                 </div>
               </div>
 
@@ -155,18 +228,17 @@ export function LoginPage() {
                 className="w-full bg-red-600 hover:bg-red-700 text-white"
                 disabled={loading}
               >
-                {loading ? "Signing in..." : "Sign in"}
+                {loading ? "Creating account..." : "Create account"}
               </Button>
             </form>
 
             <div className="text-center text-sm">
-              <span className="text-gray-600">Don't have an account? </span>
+              <span className="text-gray-600">Already have an account? </span>
               <button
-                type="button"
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/login")}
                 className="text-red-600 hover:text-red-700 font-medium"
               >
-                Signup
+                Login
               </button>
             </div>
           </div>

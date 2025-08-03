@@ -1,6 +1,7 @@
 import { DashboardPage } from "@/features/dashboard/DashboardPage"
 import { LeadsPage } from "@/features/leads/LeadsPage"
 import { LoginPage } from "@/features/auth/LoginPage"
+import { RegisterPage } from "@/features/auth/RegisterPage"
 import { ForgotPasswordPage } from "@/features/auth/ForgotPasswordPage"
 
 interface AppRouterProps {
@@ -9,8 +10,8 @@ interface AppRouterProps {
 }
 
 export function AppRouter({ currentPath, isAuthenticated }: AppRouterProps) {
-  // Allow access to login and forgot password without authentication
-  const publicRoutes = ["/login", "/forgot-password"]
+  // Allow access to login, register and forgot password without authentication
+  const publicRoutes = ["/login", "/register", "/forgot-password"]
   
   // If not authenticated and trying to access protected route, show login
   if (!isAuthenticated && !publicRoutes.includes(currentPath)) {
@@ -25,6 +26,8 @@ export function AppRouter({ currentPath, isAuthenticated }: AppRouterProps) {
   switch (currentPath) {
     case "/login":
       return <LoginPage />
+    case "/register":
+      return <RegisterPage />
     case "/forgot-password":
       return <ForgotPasswordPage />
     case "/":

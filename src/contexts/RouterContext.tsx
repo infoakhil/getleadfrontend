@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from 'react'
 import type { ReactNode } from 'react'
 
-type Route = "/" | "/login" | "/forgot-password" | "/leads" | "/companies" | "/deals" | "/calendar" | "/reports" | "/settings"
+type Route = "/" | "/login" | "/register" | "/forgot-password" | "/leads" | "/companies" | "/deals" | "/calendar" | "/reports" | "/settings"
 
 interface RouterContextType {
   currentPath: Route

@@ -25,7 +25,7 @@ export function ForgotPasswordPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left side - Hero section */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-purple-900 to-purple-700 text-white p-12 flex-col justify-between">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#3F4254] text-white p-12 flex-col justify-between">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
             <span className="text-xl font-bold">G</span>
@@ -46,7 +46,7 @@ export function ForgotPasswordPage() {
           </div>
           <div>
             <h2 className="text-3xl font-bold mb-4">Stay automated, go productive</h2>
-            <p className="text-purple-200">
+            <p className="text-gray-300">
               Say goodbye to all the repetitive and boring manual tasks now.
             </p>
           </div>
