@@ -86,7 +86,7 @@ export function DashboardPage() {
   ]
 
   return (
-    <div className="space-y-6 bg-gray-50 -m-6 p-6 min-h-screen">
+    <div className="space-y-6 bg-gray-50 -m-6 p-8 min-h-screen">
       <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
 
       {/* Stats Cards */}

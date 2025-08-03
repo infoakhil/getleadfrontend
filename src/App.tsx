@@ -39,10 +39,10 @@ function AppContent() {
       
       <div className={cn(
         "flex-1 flex flex-col transition-all duration-200",
-        sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"
+        sidebarCollapsed ? "lg:ml-20" : "lg:ml-72"
       )}>
         <header className="border-b bg-white">
-          <div className="flex h-16 items-center justify-between px-6">
+          <div className="flex h-16 items-center justify-between px-8">
             <div className="flex-1 max-w-xl">
               <div className="relative">
                 <input
