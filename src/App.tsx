@@ -34,18 +34,29 @@ function AppContent() {
       />
       
       <div className="flex-1 flex flex-col lg:ml-64">
-        <header className="border-b bg-card">
-          <div className="flex h-16 items-center justify-between px-4">
-            <h1 className="text-xl font-semibold">{APP_CONFIG.name}</h1>
+        <header className="border-b bg-white">
+          <div className="flex h-16 items-center justify-between px-6">
+            <div className="flex-1 max-w-xl">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="w-full px-4 py-2 pl-10 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">
-                Welcome, {user?.name}
+              <span className="text-sm text-gray-600">
+                {user?.name}
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleLogout}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
               >
                 <LogOut className="h-4 w-4" />
                 Logout
@@ -53,7 +64,7 @@ function AppContent() {
             </div>
           </div>
         </header>
-        <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-auto bg-gray-50">
           <AppRouter currentPath={currentPath} isAuthenticated={true} />
         </main>
       </div>

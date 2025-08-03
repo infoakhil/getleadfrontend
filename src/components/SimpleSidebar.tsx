@@ -72,14 +72,19 @@ export function SimpleSidebar({ currentPath, onNavigate, isOpen, onToggle }: Sim
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 z-40 h-screen w-64 transform bg-card border-r transition-transform duration-200 ease-in-out lg:translate-x-0",
+          "fixed left-0 top-0 z-40 h-screen w-64 transform bg-[#1E1E2E] text-white transition-transform duration-200 ease-in-out lg:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex h-full flex-col">
           {/* Logo */}
-          <div className="flex h-16 items-center border-b px-6">
-            <h2 className="text-lg font-semibold">Getlead CRM</h2>
+          <div className="flex h-16 items-center border-b border-gray-700 px-6">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold">G</span>
+              </div>
+              <span className="text-lg font-semibold">Getlead</span>
+            </div>
           </div>
 
           {/* Navigation */}
@@ -98,8 +103,8 @@ export function SimpleSidebar({ currentPath, onNavigate, isOpen, onToggle }: Sim
                   className={cn(
                     "flex w-full items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "hover:bg-accent hover:text-accent-foreground"
+                      ? "bg-red-500 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
                   )}
                 >
                   <item.icon className="mr-3 h-4 w-4" />
