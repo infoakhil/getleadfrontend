@@ -56,7 +56,12 @@ const menuItems = [
   },
 ]
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  currentPath: string
+  onNavigate: (path: any) => void
+}
+
+export function AppSidebar({ currentPath, onNavigate }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarContent>
@@ -66,11 +71,12 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </a>
+                  <SidebarMenuButton 
+                    onClick={() => onNavigate(item.url)}
+                    isActive={currentPath === item.url}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
