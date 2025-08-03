@@ -140,9 +140,13 @@ export function LoginPage() {
                   </Button>
                 </div>
                 <div className="text-right">
-                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900">
+                  <button
+                    type="button"
+                    onClick={() => navigate("/forgot-password")}
+                    className="text-sm text-gray-600 hover:text-gray-900"
+                  >
                     Forgot Password ?
-                  </a>
+                  </button>
                 </div>
               </div>
 
