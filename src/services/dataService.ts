@@ -1,4 +1,4 @@
-import { Lead, Company, Deal, Activity, DashboardStats } from '@/types'
+import type { Lead, Company, Deal, Activity, DashboardStats } from '@/types'
 
 class DataService {
   private leads: Lead[] = []

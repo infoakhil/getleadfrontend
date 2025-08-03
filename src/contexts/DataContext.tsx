@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { Lead, Company, Deal, Activity, DashboardStats } from '@/types'
+import { createContext, useContext, useState, useEffect } from 'react'
+import type { ReactNode } from 'react'
+import type { Lead, Company, Deal, Activity, DashboardStats } from '@/types'
 import { dataService } from '@/services/dataService'
 
 interface DataContextType {

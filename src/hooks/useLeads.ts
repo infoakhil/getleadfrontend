@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useData } from '@/contexts/DataContext'
-import { LeadStatus } from '@/types'
+import type { LeadStatus } from '@/types'
 
 export function useLeads() {
   const { leads, addLead, updateLead, deleteLead, searchLeads } = useData()

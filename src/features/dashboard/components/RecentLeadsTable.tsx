@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DataTable } from "@/components/common/DataTable"
 import { useDashboard } from "@/hooks/useDashboard"
-import { Lead, LeadStatus } from "@/types"
+import type { Lead, LeadStatus } from "@/types"
 
 const getStatusColor = (status: LeadStatus) => {
   const colors: Record<LeadStatus, string> = {

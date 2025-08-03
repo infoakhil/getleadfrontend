@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DataTable } from "@/components/common/DataTable"
 import { useLeads } from "@/hooks/useLeads"
-import { Lead, LeadStatus } from "@/types"
+import type { Lead, LeadStatus } from "@/types"
 import { Search, Plus } from "lucide-react"
 
 const getStatusColor = (status: LeadStatus) => {
