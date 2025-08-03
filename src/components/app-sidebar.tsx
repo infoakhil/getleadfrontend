@@ -63,10 +63,13 @@ interface AppSidebarProps {
 
 export function AppSidebar({ currentPath, onNavigate }: AppSidebarProps) {
   return (
-    <Sidebar>
+    <Sidebar className="border-r">
       <SidebarContent>
+        <div className="px-6 py-4">
+          <h2 className="text-lg font-semibold">Getlead CRM</h2>
+        </div>
         <SidebarGroup>
-          <SidebarGroupLabel>Menu</SidebarGroupLabel>
+          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
@@ -74,8 +77,9 @@ export function AppSidebar({ currentPath, onNavigate }: AppSidebarProps) {
                   <SidebarMenuButton 
                     onClick={() => onNavigate(item.url)}
                     isActive={currentPath === item.url}
+                    className="w-full justify-start"
                   >
-                    <item.icon className="h-4 w-4" />
+                    <item.icon className="mr-2 h-4 w-4" />
                     <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
