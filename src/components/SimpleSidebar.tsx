@@ -1,5 +1,11 @@
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { 
   Home, 
   Users, 
@@ -8,8 +14,11 @@ import {
   Calendar,
   BarChart3,
   Settings,
-  Menu
+  Menu,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react"
+import { useState } from "react"
 
 const menuItems = [
   {
@@ -54,9 +63,17 @@ interface SimpleSidebarProps {
   onNavigate: (path: string) => void
   isOpen: boolean
   onToggle: () => void
+  isCollapsed?: boolean
+  onCollapse?: (collapsed: boolean) => void
 }
 
-export function SimpleSidebar({ currentPath, onNavigate, isOpen, onToggle }: SimpleSidebarProps) {
+export function SimpleSidebar({ currentPath, onNavigate, isOpen, onToggle, isCollapsed: controlledCollapsed, onCollapse }: SimpleSidebarProps) {
+  const [internalCollapsed, setInternalCollapsed] = useState(false)
+  
+  // Use controlled state if provided, otherwise use internal state
+  const isCollapsed = controlledCollapsed !== undefined ? controlledCollapsed : internalCollapsed
+  const setIsCollapsed = onCollapse || setInternalCollapsed
+
   return (
     <>
       {/* Mobile toggle button */}
@@ -72,46 +89,72 @@ export function SimpleSidebar({ currentPath, onNavigate, isOpen, onToggle }: Sim
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 z-40 h-screen w-64 transform bg-[#1E1E2E] text-white transition-transform duration-200 ease-in-out lg:translate-x-0",
+          "fixed left-0 top-0 z-40 h-screen transform bg-[#1E1E2E] text-white transition-all duration-200 ease-in-out lg:translate-x-0",
+          isCollapsed ? "w-16" : "w-64",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex h-full flex-col">
           {/* Logo */}
-          <div className="flex h-16 items-center border-b border-gray-700 px-6">
+          <div className="flex h-16 items-center justify-between border-b border-gray-700 px-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-bold">G</span>
               </div>
-              <span className="text-lg font-semibold">Getlead</span>
+              {!isCollapsed && <span className="text-lg font-semibold">Getlead</span>}
             </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="hidden lg:flex text-gray-400 hover:text-white hover:bg-gray-700"
+            >
+              {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            </Button>
           </div>
 
           {/* Navigation */}
           <nav className="flex-1 space-y-1 px-3 py-4">
-            {menuItems.map((item) => {
-              const isActive = currentPath === item.url
-              return (
-                <button
-                  key={item.url}
-                  onClick={() => {
-                    onNavigate(item.url)
-                    if (window.innerWidth < 1024) {
-                      onToggle()
-                    }
-                  }}
-                  className={cn(
-                    "flex w-full items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                    isActive
-                      ? "bg-red-500 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                  )}
-                >
-                  <item.icon className="mr-3 h-4 w-4" />
-                  {item.title}
-                </button>
-              )
-            })}
+            <TooltipProvider delayDuration={0}>
+              {menuItems.map((item) => {
+                const isActive = currentPath === item.url
+                const menuButton = (
+                  <button
+                    onClick={() => {
+                      onNavigate(item.url)
+                      if (window.innerWidth < 1024) {
+                        onToggle()
+                      }
+                    }}
+                    className={cn(
+                      "flex w-full items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                      isActive
+                        ? "bg-red-500 text-white"
+                        : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                      isCollapsed && "justify-center"
+                    )}
+                  >
+                    <item.icon className={cn("h-4 w-4 flex-shrink-0", !isCollapsed && "mr-3")} />
+                    {!isCollapsed && <span>{item.title}</span>}
+                  </button>
+                )
+
+                if (isCollapsed) {
+                  return (
+                    <Tooltip key={item.url}>
+                      <TooltipTrigger asChild>
+                        {menuButton}
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="bg-gray-800 text-white border-gray-700">
+                        {item.title}
+                      </TooltipContent>
+                    </Tooltip>
+                  )
+                }
+
+                return <div key={item.url}>{menuButton}</div>
+              })}
+            </TooltipProvider>
           </nav>
         </div>
       </aside>
