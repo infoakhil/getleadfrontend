@@ -90,7 +90,7 @@ export function SimpleSidebar({ currentPath, onNavigate, isOpen, onToggle, isCol
       <aside
         className={cn(
           "fixed left-0 top-0 z-40 h-screen transform bg-[#1E1E2E] text-white transition-all duration-200 ease-in-out lg:translate-x-0 shadow-2xl",
-          isCollapsed ? "w-20" : "w-72",
+          isCollapsed ? "w-16" : "w-60",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >

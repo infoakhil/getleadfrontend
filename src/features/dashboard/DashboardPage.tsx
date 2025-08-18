@@ -1,35 +1,32 @@
 import { useState } from "react"
 import { 
   TrendingUp, 
-  TrendingDown, 
   Users, 
   DollarSign, 
   Target,
-  Calendar,
   Phone,
   CheckCircle2,
   Clock,
   AlertCircle,
-  ArrowUpRight,
-  ArrowDownRight,
-  MoreVertical,
-  ArrowRight
+  FileText,
+  Activity
 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
+import { Badge } from "@/components/ui/badge"
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, CartesianGrid } from "recharts"
 
 // Generate chart data
 const generateLeadsData = () => {
   const data = []
   const today = new Date()
-  for (let i = 29; i >= 0; i--) {
+  for (let i = 6; i >= 0; i--) {
     const date = new Date(today)
     date.setDate(date.getDate() - i)
     data.push({
-      date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      date: date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
       leads: Math.floor(Math.random() * 30) + 10,
       deals: Math.floor(Math.random() * 15) + 5
     })
@@ -51,39 +48,9 @@ const COLORS = {
 
 export function DashboardPage() {
   const [dateRange, setDateRange] = useState("all")
+  const [activeTab, setActiveTab] = useState("leads")
   
   const leadsData = generateLeadsData()
-
-  const stats = [
-    {
-      title: "Today",
-      value: "19",
-      bgColor: "bg-[#47B7B8]",
-      textColor: "text-white",
-      icon: ArrowRight
-    },
-    {
-      title: "Month",
-      value: "171",
-      bgColor: "bg-[#F86642]",
-      textColor: "text-white",
-      icon: ArrowRight
-    },
-    {
-      title: "Total",
-      value: "69",
-      bgColor: "bg-[#E94B9C]",
-      textColor: "text-white",
-      icon: ArrowRight
-    },
-    {
-      title: "Total",
-      value: "19661",
-      bgColor: "bg-[#6C63FF]",
-      textColor: "text-white",
-      icon: ArrowRight
-    }
-  ]
 
   const leadStatusData = [
     { name: "Converted", value: 41, color: "#10B981" },
@@ -98,53 +65,13 @@ export function DashboardPage() {
     { name: "Demo Scheduled-I", value: 1, color: "#EC4899" }
   ]
 
-  const recentActivities = [
-    {
-      id: 1,
-      user: "John Doe",
-      action: "created a new lead",
-      target: "Acme Corporation",
-      time: "2 minutes ago",
-      avatar: "JD"
-    },
-    {
-      id: 2,
-      user: "Jane Smith",
-      action: "closed a deal with",
-      target: "Tech Startup Inc",
-      time: "1 hour ago",
-      avatar: "JS"
-    },
-    {
-      id: 3,
-      user: "Mike Johnson",
-      action: "scheduled a meeting with",
-      target: "Global Corp",
-      time: "3 hours ago",
-      avatar: "MJ"
-    },
-    {
-      id: 4,
-      user: "Sarah Williams",
-      action: "sent a proposal to",
-      target: "Innovation Ltd",
-      time: "5 hours ago",
-      avatar: "SW"
-    }
-  ]
-
   const leadSourceData = [
-    { name: "New", value: 70, color: COLORS.new },
-    { name: "Qualified Sent", value: 20, color: COLORS.qualified },
-    { name: "Sent", value: 10, color: COLORS.sent }
+    { name: "Direct", value: 45, color: COLORS.primary },
+    { name: "Social Media", value: 30, color: COLORS.secondary },
+    { name: "Email Campaign", value: 15, color: COLORS.warning },
+    { name: "Referral", value: 10, color: COLORS.info }
   ]
   
-  const leadPurposeData = [
-    { name: "Agency", value: 40, color: COLORS.primary },
-    { name: "Direct", value: 35, color: COLORS.secondary },
-    { name: "Partnership", value: 25, color: COLORS.warning }
-  ]
-
   const callStatusData = [
     { name: "Total task", value: 4530, color: "#3B82F6" },
     { name: "Pending", value: 401, color: "#10B981" },
@@ -152,9 +79,36 @@ export function DashboardPage() {
     { name: "Completed", value: 4066, color: "#8B5CF6" }
   ]
   
-  const dealsData = [
-    { name: "Adelina", inProgress: 60, color: "#F59E0B" },
-    { name: "Name Name", inProgress: 80, color: "#3B82F6" }
+  const dealStageData = [
+    { name: "Qualification", value: 15, amount: "₹2,50,000", color: "#3B82F6" },
+    { name: "Proposal", value: 8, amount: "₹5,80,000", color: "#10B981" },
+    { name: "Negotiation", value: 5, amount: "₹3,20,000", color: "#F59E0B" },
+    { name: "Closed Won", value: 23, amount: "₹12,50,000", color: "#8B5CF6" },
+    { name: "Closed Lost", value: 7, amount: "₹1,80,000", color: "#EF4444" }
+  ]
+
+
+  const latestLeads = [
+    { id: 1, name: "John Smith", company: "Acme Corporation", email: "john@acme.com", phone: "+1 234-567-8900", status: "New", source: "Website", time: "5 minutes ago" },
+    { id: 2, name: "Sarah Johnson", company: "Tech Startup Inc", email: "sarah@techstartup.com", phone: "+1 234-567-8901", status: "Hot", source: "Referral", time: "1 hour ago" },
+    { id: 3, name: "Mike Williams", company: "Global Corp", email: "mike@globalcorp.com", phone: "+1 234-567-8902", status: "Warm", source: "Email Campaign", time: "2 hours ago" },
+    { id: 4, name: "Emily Davis", company: "Innovation Ltd", email: "emily@innovation.com", phone: "+1 234-567-8903", status: "New", source: "Social Media", time: "3 hours ago" },
+    { id: 5, name: "David Brown", company: "Enterprise Solutions", email: "david@enterprise.com", phone: "+1 234-567-8904", status: "Cold", source: "Direct", time: "4 hours ago" }
+  ]
+
+  const latestDeals = [
+    { id: 1, name: "Website Redesign", company: "Acme Corporation", amount: "₹2,50,000", stage: "Proposal", probability: 75, closeDate: "2024-02-15", owner: "John Doe" },
+    { id: 2, name: "Mobile App Development", company: "Tech Startup Inc", amount: "₹5,80,000", stage: "Negotiation", probability: 60, closeDate: "2024-02-20", owner: "Jane Smith" },
+    { id: 3, name: "CRM Implementation", company: "Global Corp", amount: "₹3,20,000", stage: "Qualification", probability: 30, closeDate: "2024-03-01", owner: "Mike Johnson" },
+    { id: 4, name: "Cloud Migration", company: "Innovation Ltd", amount: "₹4,50,000", stage: "Proposal", probability: 80, closeDate: "2024-02-18", owner: "Sarah Williams" }
+  ]
+
+  const todaysTasks = [
+    { id: 1, title: "Follow up with Acme Corp", type: "call", priority: "high", dueTime: "10:00 AM", status: "pending", assignee: "John Doe", related: "Lead - John Smith" },
+    { id: 2, title: "Send proposal to Tech Startup", type: "email", priority: "medium", dueTime: "2:00 PM", status: "completed", assignee: "Jane Smith", related: "Deal - Mobile App Development" },
+    { id: 3, title: "Product demo for Global Corp", type: "meeting", priority: "high", dueTime: "4:00 PM", status: "pending", assignee: "Mike Johnson", related: "Lead - Mike Williams" },
+    { id: 4, title: "Review contract terms", type: "task", priority: "low", dueTime: "5:00 PM", status: "pending", assignee: "Sarah Williams", related: "Deal - Cloud Migration" },
+    { id: 5, title: "Update CRM records", type: "task", priority: "medium", dueTime: "3:00 PM", status: "overdue", assignee: "David Brown", related: "General" }
   ]
 
   return (
@@ -163,8 +117,6 @@ export function DashboardPage() {
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <h1 className="text-2xl font-semibold">Dashboard</h1>
         <div className="flex items-center gap-4">
-          <div className="text-sm text-muted-foreground">77 Open Deals</div>
-          <div className="text-sm text-muted-foreground">₹2019885 Pipeline amount</div>
           <Select value={dateRange} onValueChange={setDateRange}>
             <SelectTrigger className="w-[140px]">
               <SelectValue placeholder="Select Branch" />
@@ -188,178 +140,513 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat, index) => (
-          <div key={index} className={`${stat.bgColor} rounded-lg p-6 ${stat.textColor} relative overflow-hidden`}>
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-3xl font-bold mb-1">{stat.value}</div>
-                <div className="text-sm opacity-90">{stat.title}</div>
-              </div>
-              <stat.icon className="h-6 w-6 opacity-50" />
-            </div>
+      {/* Compact Tab Navigation */}
+      <div className="flex items-center gap-1 border-b">
+        <button
+          onClick={() => setActiveTab("leads")}
+          className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
+            activeTab === "leads" 
+              ? "text-primary border-primary" 
+              : "text-muted-foreground border-transparent hover:text-foreground"
+          }`}
+        >
+          <Users className="h-4 w-4" />
+          Leads
+        </button>
+        <button
+          onClick={() => setActiveTab("deals")}
+          className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
+            activeTab === "deals" 
+              ? "text-primary border-primary" 
+              : "text-muted-foreground border-transparent hover:text-foreground"
+          }`}
+        >
+          <DollarSign className="h-4 w-4" />
+          Deals
+        </button>
+        <button
+          onClick={() => setActiveTab("tasks")}
+          className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
+            activeTab === "tasks" 
+              ? "text-primary border-primary" 
+              : "text-muted-foreground border-transparent hover:text-foreground"
+          }`}
+        >
+          <CheckCircle2 className="h-4 w-4" />
+          Tasks
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      <div className="mt-4">
+        {/* Leads Tab */}
+        {activeTab === "leads" && (
+          <div className="space-y-6">
+          {/* Lead Stats Cards */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Leads</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">171</div>
+                <p className="text-xs text-muted-foreground">+12% from last month</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">New This Week</CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">37</div>
+                <p className="text-xs text-muted-foreground">+23% from last week</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Converted</CardTitle>
+                <Target className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">41</div>
+                <p className="text-xs text-muted-foreground">23.9% conversion rate</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Hot Leads</CardTitle>
+                <Activity className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">11</div>
+                <p className="text-xs text-muted-foreground">Ready to convert</p>
+              </CardContent>
+            </Card>
           </div>
-        ))}
-      </div>
 
-      {/* Main Content */}
-      <div className="grid gap-4 lg:grid-cols-2">
-        {/* Last 30 days added Leads Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Last 30 days added Leads</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={leadsData}>
-                <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip />
-                <Bar dataKey="leads" fill="#EF4444" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+          <div className="grid gap-4 lg:grid-cols-2">
+            {/* Lead Trend Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Lead Generation Trend</CardTitle>
+                <CardDescription>New leads over the last 7 days</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={leadsData}>
+                    <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+                    <YAxis tick={{ fontSize: 11 }} />
+                    <Tooltip />
+                    <Bar dataKey="leads" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
 
-        {/* Lead Status */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Lead status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {leadStatusData.map((status) => (
-                <div key={status.name} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: status.color }} />
-                    <span>{status.name}</span>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="font-medium">{status.value}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Second Row */}
-      <div className="grid gap-4 lg:grid-cols-2">
-        {/* Task status */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Task status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {callStatusData.map((status) => (
-                <div key={status.name} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: status.color }} />
-                    <span className="text-sm">{status.name}</span>
-                  </div>
-                  <span className="text-sm font-medium">{status.value}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Deals in progress */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Deals in progress</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {dealsData.map((deal) => (
-                <div key={deal.name} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{deal.name}</span>
-                    <span className="text-sm text-muted-foreground">{deal.inProgress}%</span>
-                  </div>
-                  <Progress value={deal.inProgress} className="h-2" style={{ backgroundColor: '#E5E7EB' }} />
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Third Row */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        {/* Deal pipeline */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Deal pipeline</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span>New</span>
-                <span className="font-medium">2</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span>Qualified Sent</span>
-                <span className="font-medium">4</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Lead source */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Lead source</CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <ResponsiveContainer width={150} height={150}>
-              <PieChart>
-                <Pie
-                  data={leadSourceData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={40}
-                  outerRadius={60}
-                  dataKey="value"
-                >
-                  {leadSourceData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+            {/* Lead Status Distribution */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Lead Status</CardTitle>
+                <CardDescription>Current distribution of all leads</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                  {leadStatusData.slice(0, 8).map((status) => (
+                    <div key={status.name} className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: status.color }} />
+                        <span className="text-sm">{status.name}</span>
+                      </div>
+                      <span className="text-sm font-semibold">{status.value}</span>
+                    </div>
                   ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-        {/* Lead purpose */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Lead purpose</CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <ResponsiveContainer width={150} height={150}>
-              <PieChart>
-                <Pie
-                  data={leadPurposeData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={40}
-                  outerRadius={60}
-                  dataKey="value"
-                >
-                  {leadPurposeData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+          <div className="grid gap-4 lg:grid-cols-2">
+            {/* Lead Source */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Lead Sources</CardTitle>
+                <CardDescription>Where your leads are coming from</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-around">
+                  <ResponsiveContainer width={200} height={200}>
+                    <PieChart>
+                      <Pie
+                        data={leadSourceData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={50}
+                        outerRadius={80}
+                        dataKey="value"
+                      >
+                        {leadSourceData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="space-y-2">
+                    {leadSourceData.map((source) => (
+                      <div key={source.name} className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: source.color }} />
+                        <span className="text-sm">{source.name}: {source.value}%</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Latest Leads */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Latest Leads</CardTitle>
+                    <CardDescription>Recently added leads</CardDescription>
+                  </div>
+                  <Button variant="outline" size="sm">View All</Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {latestLeads.slice(0, 5).map((lead) => (
+                    <div key={lead.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-sm">{lead.name}</p>
+                          <Badge variant={
+                            lead.status === "Hot" ? "destructive" :
+                            lead.status === "Warm" ? "default" :
+                            lead.status === "New" ? "secondary" :
+                            "outline"
+                          } className="text-xs">
+                            {lead.status}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground">{lead.company}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{lead.source} • {lead.time}</p>
+                      </div>
+                      <Button variant="ghost" size="sm">
+                        <Phone className="h-4 w-4" />
+                      </Button>
+                    </div>
                   ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          </div>
+        )}
+
+        {/* Deals Tab */}
+        {activeTab === "deals" && (
+          <div className="space-y-6">
+          {/* Deal Stats Cards */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Open Deals</CardTitle>
+                <FileText className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">77</div>
+                <p className="text-xs text-muted-foreground">Worth ₹20,18,885</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Won This Month</CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">23</div>
+                <p className="text-xs text-muted-foreground">₹12,50,000 revenue</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Average Deal Size</CardTitle>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">₹54,348</div>
+                <p className="text-xs text-muted-foreground">+8% from last month</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Win Rate</CardTitle>
+                <Target className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">76.7%</div>
+                <p className="text-xs text-muted-foreground">23 won out of 30</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Deal Pipeline */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Deal Pipeline</CardTitle>
+              <CardDescription>Deals by stage</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {dealStageData.map((stage) => (
+                  <div key={stage.name} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: stage.color }} />
+                        <span className="font-medium">{stage.name}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-semibold">{stage.value} deals</span>
+                        <span className="text-sm text-muted-foreground ml-2">{stage.amount}</span>
+                      </div>
+                    </div>
+                    <Progress 
+                      value={(stage.value / dealStageData.reduce((acc, curr) => acc + curr.value, 0)) * 100} 
+                      className="h-2"
+                    />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            {/* Deal Trend */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Deal Closure Trend</CardTitle>
+                <CardDescription>Deals closed over the last 7 days</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={leadsData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+                    <YAxis tick={{ fontSize: 11 }} />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="deals" stroke="#10B981" strokeWidth={2} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            {/* Latest Deals */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Latest Deals</CardTitle>
+                    <CardDescription>Recently updated deals</CardDescription>
+                  </div>
+                  <Button variant="outline" size="sm">View All</Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {latestDeals.map((deal) => (
+                    <div key={deal.id} className="p-3 border rounded-lg hover:bg-muted/50 transition-colors">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="font-medium text-sm">{deal.name}</p>
+                        <p className="font-semibold text-sm">{deal.amount}</p>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                          <span>{deal.company}</span>
+                          <Badge variant={
+                            deal.stage === "Proposal" ? "default" :
+                            deal.stage === "Negotiation" ? "secondary" :
+                            "outline"
+                          } className="text-xs">
+                            {deal.stage}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs">
+                          <span className="text-muted-foreground">Close:</span>
+                          <span>{deal.closeDate}</span>
+                        </div>
+                      </div>
+                      <div className="mt-2">
+                        <div className="flex items-center justify-between text-xs mb-1">
+                          <span className="text-muted-foreground">Probability</span>
+                          <span>{deal.probability}%</span>
+                        </div>
+                        <Progress value={deal.probability} className="h-1.5" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          </div>
+        )}
+
+        {/* Tasks Tab */}
+        {activeTab === "tasks" && (
+          <div className="space-y-6">
+          {/* Task Stats Cards */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Tasks</CardTitle>
+                <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">4,530</div>
+                <p className="text-xs text-muted-foreground">All time</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Pending</CardTitle>
+                <Clock className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">401</div>
+                <p className="text-xs text-muted-foreground">Needs attention</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Overdue</CardTitle>
+                <AlertCircle className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-red-600">63</div>
+                <p className="text-xs text-muted-foreground">Requires immediate action</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Completed Today</CardTitle>
+                <Target className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">28</div>
+                <p className="text-xs text-muted-foreground">Great progress!</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            {/* Task Status Overview */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Task Status Overview</CardTitle>
+                <CardDescription>Distribution of all tasks</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {callStatusData.map((status) => (
+                    <div key={status.name} className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: status.color }} />
+                        <span className="text-sm">{status.name}</span>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className="text-sm font-semibold">{status.value}</span>
+                        <span className="text-xs text-muted-foreground">
+                          ({((status.value / 4530) * 100).toFixed(1)}%)
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Today's Tasks */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Today's Tasks</CardTitle>
+                    <CardDescription>Tasks scheduled for today</CardDescription>
+                  </div>
+                  <Button variant="outline" size="sm">View All</Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {todaysTasks.map((task) => (
+                    <div key={task.id} className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors">
+                      <div className={`p-2 rounded-lg ${
+                        task.type === 'call' ? 'bg-blue-100' :
+                        task.type === 'email' ? 'bg-green-100' :
+                        task.type === 'meeting' ? 'bg-purple-100' :
+                        'bg-gray-100'
+                      }`}>
+                        {task.type === 'call' && <Phone className="h-4 w-4 text-blue-600" />}
+                        {task.type === 'email' && <FileText className="h-4 w-4 text-green-600" />}
+                        {task.type === 'meeting' && <Users className="h-4 w-4 text-purple-600" />}
+                        {task.type === 'task' && <CheckCircle2 className="h-4 w-4 text-gray-600" />}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <p className="font-medium text-sm">{task.title}</p>
+                          <Badge variant={
+                            task.status === 'completed' ? 'secondary' :
+                            task.status === 'overdue' ? 'destructive' :
+                            'outline'
+                          } className="text-xs">
+                            {task.status}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground mt-1">
+                          <span>{task.dueTime}</span>
+                          <span>•</span>
+                          <span>{task.assignee}</span>
+                          <span>•</span>
+                          <span>{task.related}</span>
+                        </div>
+                      </div>
+                      <Badge variant={
+                        task.priority === 'high' ? 'destructive' :
+                        task.priority === 'medium' ? 'default' :
+                        'secondary'
+                      } className="text-xs">
+                        {task.priority}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Task Completion Trend */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Task Completion Trend</CardTitle>
+              <CardDescription>Tasks completed over the last 7 days</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={leadsData.map(d => ({ ...d, tasks: Math.floor(Math.random() * 50) + 20 }))}>
+                  <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+                  <YAxis tick={{ fontSize: 11 }} />
+                  <Tooltip />
+                  <Bar dataKey="tasks" fill="#8B5CF6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+          </div>
+        )}
       </div>
     </div>
   )

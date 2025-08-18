@@ -4,7 +4,6 @@ import { DataProvider } from "@/contexts/DataContext"
 import { AuthProvider, useAuth } from "@/contexts/AuthContext"
 import { RouterProvider, useRouter } from "@/contexts/RouterContext"
 import { AppRouter } from "@/components/AppRouter"
-import { APP_CONFIG } from "@/config"
 import { Button } from "@/components/ui/button"
 import { LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -39,7 +38,7 @@ function AppContent() {
       
       <div className={cn(
         "flex-1 flex flex-col transition-all duration-200",
-        sidebarCollapsed ? "lg:ml-20" : "lg:ml-72"
+        sidebarCollapsed ? "lg:ml-16" : "lg:ml-60"
       )}>
         <header className="border-b bg-white">
           <div className="flex h-16 items-center justify-between px-8">
